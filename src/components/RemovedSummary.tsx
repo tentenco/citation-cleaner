@@ -22,7 +22,7 @@ export function RemovedSummary({ result, inputLength }: RemovedSummaryProps) {
   const verdict = outputLength > 0 ? "Review-ready" : "Awaiting paste";
 
   return (
-    <aside className="summary-panel" aria-labelledby="removed-summary-title">
+    <aside id="report" className="summary-panel" aria-labelledby="removed-summary-title">
       <div className="summary-heading">
         <p className="eyebrow">Signal</p>
         <h2 id="removed-summary-title">Cleanup report</h2>

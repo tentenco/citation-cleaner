@@ -104,94 +104,141 @@ export default function Page() {
   }
 
   return (
-    <main className="app-shell">
-      <header className="app-header">
-        <div className="header-main">
-          <p className="brand-mark">Citation Cleaner</p>
-          <h1>Make AI copy publishable.</h1>
-          <p className="header-copy">
-            Strip citations, source trails, and tracking clutter from chatbot Markdown locally.
-          </p>
-          <div className="proof-strip" aria-label="Product guarantees">
-            <span>0 uploads</span>
-            <span>Deterministic rules</span>
-            <span>Markdown-safe</span>
-          </div>
+    <>
+      <a className="skip-link" href="#workspace">
+        Skip to cleaner
+      </a>
+
+      <div className="utility-strip" aria-label="Service details">
+        <span>Browser-local</span>
+        <span>No account required</span>
+        <span>Markdown in, Markdown out</span>
+      </div>
+
+      <nav className="nav-bar-top" aria-label="Primary">
+        <a className="wordmark" href="#workspace" aria-label="Citation Cleaner home">
+          CC
+        </a>
+        <div className="nav-links" aria-label="Page sections">
+          <a className="nav-link active" href="#workspace">
+            Cleaner
+          </a>
+          <a className="nav-link" href="#samples">
+            Samples
+          </a>
+          <a className="nav-link" href="#report">
+            Report
+          </a>
         </div>
-        <div className="sample-lab" aria-label="Fast start samples">
-          <p>Fast start</p>
-          <div className="sample-grid">
-            {sampleScenarios.map((scenario, index) => (
-              <button
-                key={scenario.id}
-                type="button"
-                className="scenario-card"
-                onClick={() => loadScenario(index)}
-                aria-label={`Try ${scenario.title}`}
-              >
-                <span>{scenario.title.replace(" sample", "")}</span>
-                <small>{scenario.description}</small>
-              </button>
-            ))}
-          </div>
-        </div>
-        <button type="button" className="sample-button" onClick={loadSample}>
+        <button type="button" className="nav-cta" onClick={loadSample}>
           Load sample
         </button>
-      </header>
+      </nav>
 
-      <section className="growth-rail" aria-label="Workflow">
-        <div>
-          <strong>Paste</strong>
-          <span>Keep code and links intact.</span>
-        </div>
-        <div>
-          <strong>Clean</strong>
-          <span>Remove the artifacts users notice first.</span>
-        </div>
-        <div>
-          <strong>Copy</strong>
-          <span>Leave with publish-ready Markdown.</span>
-        </div>
-      </section>
+      <main className="app-shell">
+        <header className="hero-band">
+          <div className="hero-promo-card">
+            <span className="chevron-decoration chevron-left" aria-hidden="true" />
+            <span className="chevron-decoration chevron-right" aria-hidden="true" />
 
-      <Toolbar
-        provider={provider}
-        intensity={intensity}
-        canUseOutput={result.output.length > 0}
-        onProviderChange={setProvider}
-        onIntensityChange={setIntensity}
-        onClean={handleClean}
-        onCopy={handleCopy}
-        onDownload={handleDownload}
-        onReset={handleReset}
-      />
+            <div className="header-main">
+              <p className="brand-mark">Citation Cleaner</p>
+              <h1>Make AI copy publishable.</h1>
+              <p className="header-copy">
+                Strip citations, source trails, and tracking clutter from chatbot Markdown locally.
+              </p>
+              <div className="proof-strip" aria-label="Product guarantees">
+                <span>0 uploads</span>
+                <span>Deterministic rules</span>
+                <span>Markdown-safe</span>
+              </div>
+            </div>
 
-      <p className="status-line" aria-live="polite">
-        {status}
-      </p>
+            <div id="samples" className="sample-lab" aria-label="Fast start samples">
+              <p>Fast start</p>
+              <div className="sample-grid">
+                {sampleScenarios.map((scenario, index) => (
+                  <button
+                    key={scenario.id}
+                    type="button"
+                    className="scenario-card"
+                    onClick={() => loadScenario(index)}
+                    aria-label={`Try ${scenario.title}`}
+                  >
+                    <span>{scenario.title.replace(" sample", "")}</span>
+                    <small>{scenario.description}</small>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </header>
 
-      <div className="workspace-grid">
-        <div className="editors-grid">
-          <EditorPane
-            id="raw-markdown"
-            label="Raw Markdown"
-            helper="Paste from ChatGPT, Claude, Gemini, Perplexity, DeepSeek, Kimi, or AI Overview."
-            value={input}
-            placeholder="Paste AI-copied Markdown here..."
-            onChange={setInput}
-          />
-          <EditorPane
-            id="cleaned-markdown"
-            label="Cleaned Markdown"
-            helper="Review the deterministic output before copying or downloading."
-            value={result.output}
-            placeholder="Cleaned Markdown will appear here."
-            readOnly
-          />
+        <section className="growth-rail" aria-label="Workflow">
+          <div>
+            <strong>Paste</strong>
+            <span>Keep code and links intact.</span>
+          </div>
+          <div>
+            <strong>Clean</strong>
+            <span>Remove the artifacts users notice first.</span>
+          </div>
+          <div>
+            <strong>Copy</strong>
+            <span>Leave with publish-ready Markdown.</span>
+          </div>
+        </section>
+
+        <Toolbar
+          provider={provider}
+          intensity={intensity}
+          canUseOutput={result.output.length > 0}
+          onProviderChange={setProvider}
+          onIntensityChange={setIntensity}
+          onClean={handleClean}
+          onCopy={handleCopy}
+          onDownload={handleDownload}
+          onReset={handleReset}
+        />
+
+        <p className="status-line" aria-live="polite">
+          {status}
+        </p>
+
+        <div id="workspace" className="workspace-grid">
+          <div className="editors-grid">
+            <EditorPane
+              id="raw-markdown"
+              label="Raw Markdown"
+              helper="Paste from ChatGPT, Claude, Gemini, Perplexity, DeepSeek, Kimi, or AI Overview."
+              value={input}
+              placeholder="Paste AI-copied Markdown here..."
+              onChange={setInput}
+            />
+            <EditorPane
+              id="cleaned-markdown"
+              label="Cleaned Markdown"
+              helper="Review the deterministic output before copying or downloading."
+              value={result.output}
+              placeholder="Cleaned Markdown will appear here."
+              readOnly
+            />
+          </div>
+          <RemovedSummary result={result} inputLength={input.length} />
         </div>
-        <RemovedSummary result={result} inputLength={input.length} />
-      </div>
-    </main>
+
+        <section className="help-band-dark" aria-label="Local publishing assurance">
+          <div>
+            <p className="eyebrow">Local workflow</p>
+            <h2>Clean copy without uploading the draft.</h2>
+          </div>
+          <div className="assurance-tabs" aria-label="Assurances">
+            <span>Private</span>
+            <span>Deterministic</span>
+            <span>Exportable</span>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }
