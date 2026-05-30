@@ -1,4 +1,10 @@
-import { Copy, Download, RotateCcw, ShieldCheck, Wand2 } from "lucide-react";
+import {
+  ArrowCounterClockwise,
+  Broom,
+  ClipboardText,
+  DownloadSimple,
+  LockSimple
+} from "@phosphor-icons/react";
 import {
   intensities,
   intensityLabels,
@@ -66,26 +72,26 @@ export function Toolbar({
 
       <div className="actions" aria-label="Output actions">
         <button type="button" className="primary-action" onClick={onClean}>
-          <Wand2 aria-hidden="true" size={18} />
+          <Broom aria-hidden="true" size={18} weight="bold" />
           Clean
         </button>
         <button type="button" onClick={onCopy} disabled={!canUseOutput}>
-          <Copy aria-hidden="true" size={18} />
+          <ClipboardText aria-hidden="true" size={18} weight="bold" />
           Copy output
         </button>
         <button type="button" onClick={onDownload} disabled={!canUseOutput}>
-          <Download aria-hidden="true" size={18} />
+          <DownloadSimple aria-hidden="true" size={18} weight="bold" />
           Download .md
         </button>
         <button type="button" onClick={onReset}>
-          <RotateCcw aria-hidden="true" size={18} />
+          <ArrowCounterClockwise aria-hidden="true" size={18} weight="bold" />
           Reset
         </button>
       </div>
 
       <div className="privacy-pill">
-        <ShieldCheck aria-hidden="true" size={17} />
-        Runs locally in your browser
+        <LockSimple aria-hidden="true" size={17} weight="bold" />
+        Local only
       </div>
     </section>
   );

@@ -5,7 +5,7 @@ import { EditorPane } from "@/components/EditorPane";
 import { RemovedSummary } from "@/components/RemovedSummary";
 import { Toolbar } from "@/components/Toolbar";
 import { cleanMarkdown } from "@/lib/cleaner/clean";
-import { sampleMarkdown } from "@/lib/cleaner/samples";
+import { sampleMarkdown, sampleScenarios } from "@/lib/cleaner/samples";
 import type { CleanOptions, CleanResult, Intensity, Provider } from "@/lib/cleaner/types";
 
 const emptyResult: CleanResult = {
@@ -37,7 +37,7 @@ export default function Page() {
   const [provider, setProvider] = useState<Provider>("auto");
   const [intensity, setIntensity] = useState<Intensity>("balanced");
   const [result, setResult] = useState<CleanResult>(emptyResult);
-  const [status, setStatus] = useState("Paste Markdown copied from an AI answer, then clean it locally.");
+  const [status, setStatus] = useState("Paste AI Markdown, clean locally, copy the publishable version.");
 
   const options = useMemo<CleanOptions>(
     () => ({
@@ -78,7 +78,7 @@ export default function Page() {
   function handleReset() {
     setInput("");
     setResult(emptyResult);
-    setStatus("Paste Markdown copied from an AI answer, then clean it locally.");
+    setStatus("Paste AI Markdown, clean locally, copy the publishable version.");
   }
 
   function loadSample() {
@@ -88,21 +88,72 @@ export default function Page() {
     setStatus("Sample loaded and cleaned locally.");
   }
 
+  function loadScenario(index: number) {
+    const scenario = sampleScenarios[index];
+    const nextOptions: CleanOptions = {
+      provider: scenario.provider,
+      intensity: scenario.intensity
+    };
+    const nextResult = cleanMarkdown(scenario.markdown, nextOptions);
+
+    setProvider(scenario.provider);
+    setIntensity(scenario.intensity);
+    setInput(scenario.markdown);
+    setResult(nextResult);
+    setStatus(`${scenario.title} loaded. The output is ready to review.`);
+  }
+
   return (
     <main className="app-shell">
       <header className="app-header">
-        <div>
-          <p className="eyebrow">Browser-local Markdown utility</p>
-          <h1>Citation Cleaner</h1>
+        <div className="header-main">
+          <p className="brand-mark">Citation Cleaner</p>
+          <h1>Make AI copy publishable.</h1>
           <p className="header-copy">
-            Remove citation markers, source blocks, tracking links, and AI-response framing
-            from copied chatbot Markdown without sending text to a server.
+            Strip citations, source trails, and tracking clutter from chatbot Markdown locally.
           </p>
+          <div className="proof-strip" aria-label="Product guarantees">
+            <span>0 uploads</span>
+            <span>Deterministic rules</span>
+            <span>Markdown-safe</span>
+          </div>
+        </div>
+        <div className="sample-lab" aria-label="Fast start samples">
+          <p>Fast start</p>
+          <div className="sample-grid">
+            {sampleScenarios.map((scenario, index) => (
+              <button
+                key={scenario.id}
+                type="button"
+                className="scenario-card"
+                onClick={() => loadScenario(index)}
+                aria-label={`Try ${scenario.title}`}
+              >
+                <span>{scenario.title.replace(" sample", "")}</span>
+                <small>{scenario.description}</small>
+              </button>
+            ))}
+          </div>
         </div>
         <button type="button" className="sample-button" onClick={loadSample}>
           Load sample
         </button>
       </header>
+
+      <section className="growth-rail" aria-label="Workflow">
+        <div>
+          <strong>Paste</strong>
+          <span>Keep code and links intact.</span>
+        </div>
+        <div>
+          <strong>Clean</strong>
+          <span>Remove the artifacts users notice first.</span>
+        </div>
+        <div>
+          <strong>Copy</strong>
+          <span>Leave with publish-ready Markdown.</span>
+        </div>
+      </section>
 
       <Toolbar
         provider={provider}
@@ -125,7 +176,7 @@ export default function Page() {
           <EditorPane
             id="raw-markdown"
             label="Raw Markdown"
-            helper="Paste Markdown from ChatGPT, Claude, Gemini, Perplexity, DeepSeek, Kimi, or AI Overview."
+            helper="Paste from ChatGPT, Claude, Gemini, Perplexity, DeepSeek, Kimi, or AI Overview."
             value={input}
             placeholder="Paste AI-copied Markdown here..."
             onChange={setInput}
@@ -139,7 +190,7 @@ export default function Page() {
             readOnly
           />
         </div>
-        <RemovedSummary result={result} />
+        <RemovedSummary result={result} inputLength={input.length} />
       </div>
     </main>
   );

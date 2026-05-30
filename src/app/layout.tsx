@@ -1,9 +1,23 @@
 import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-sans"
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono"
+});
 
 export const metadata: Metadata = {
   title: "Citation Cleaner",
-  description: "Browser-local Markdown cleanup for AI chatbot citations and source artifacts."
+  description: "Browser-local Markdown cleanup for AI chatbot citations and source artifacts.",
+  icons: {
+    icon: "/icon.svg"
+  }
 };
 
 export default function RootLayout({
@@ -13,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={`${geist.variable} ${geistMono.variable}`}>{children}</body>
     </html>
   );
 }

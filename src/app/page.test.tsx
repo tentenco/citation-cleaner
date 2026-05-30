@@ -1,10 +1,15 @@
 import "@testing-library/jest-dom/vitest";
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import Page from "./page";
 
 describe("Citation Cleaner workbench", () => {
+  afterEach(() => {
+    cleanup();
+    vi.restoreAllMocks();
+  });
+
   test("cleans pasted Markdown and reports removed artifacts", async () => {
     const user = userEvent.setup();
     Object.defineProperty(navigator, "clipboard", {
@@ -27,5 +32,21 @@ describe("Citation Cleaner workbench", () => {
 
     await user.click(screen.getByRole("button", { name: "Copy output" }));
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith("Answer with citations.");
+  });
+
+  test("loads a provider sample to shorten time to first clean output", async () => {
+    const user = userEvent.setup();
+
+    render(<Page />);
+
+    await user.click(screen.getByRole("button", { name: "Try Perplexity sample" }));
+
+    expect((screen.getByLabelText("Raw Markdown") as HTMLTextAreaElement).value).toContain(
+      "Sources:"
+    );
+    expect((screen.getByLabelText("Cleaned Markdown") as HTMLTextAreaElement).value).not.toContain(
+      "Sources:"
+    );
+    expect(screen.getByLabelText("Source")).toHaveValue("perplexity");
   });
 });
