@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Manrope } from "next/font/google";
 import "../globals.css";
@@ -11,6 +11,10 @@ const manrope = Manrope({
 });
 
 export const dynamicParams = false;
+
+export const viewport: Viewport = {
+  themeColor: "#024ad8"
+};
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));

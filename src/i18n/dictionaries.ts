@@ -62,6 +62,24 @@ export type Dictionary = {
   };
   helpBand: { eyebrow: string; title: string; tabs: [string, string, string] };
   language: { label: string };
+  tools: {
+    analysisTitle: string;
+    aiScore: string;
+    levels: { low: string; medium: string; high: string };
+    wordsAnalyzed: string;
+    tellsTitle: string;
+    noTells: string;
+    disclaimer: string;
+    estTokens: string;
+    tokensNote: string;
+    shareButton: string;
+    downloadCard: string;
+    copyLink: string;
+    linkCopied: string;
+    cardTagline: string;
+    liveClean: string;
+    inlineDiff: string;
+  };
 };
 
 const en: Dictionary = {
@@ -156,7 +174,25 @@ const en: Dictionary = {
     title: "Clean copy without uploading the draft.",
     tabs: ["Private", "Deterministic", "Exportable"]
   },
-  language: { label: "Change language" }
+  language: { label: "Change language" },
+  tools: {
+    analysisTitle: "Writing analysis",
+    aiScore: "AI-ness score",
+    levels: { low: "Human-like", medium: "Mixed signals", high: "Reads very AI" },
+    wordsAnalyzed: "words analyzed",
+    tellsTitle: "Detected tells",
+    noTells: "No obvious AI tells found.",
+    disclaimer: "Heuristic check, tuned for English text.",
+    estTokens: "Est. tokens",
+    tokensNote: "Approximate — not billing-accurate.",
+    shareButton: "Share result",
+    downloadCard: "Download card",
+    copyLink: "Copy link",
+    linkCopied: "Share link copied to clipboard.",
+    cardTagline: "Cleaned with Citation Cleaner",
+    liveClean: "Live clean",
+    inlineDiff: "Inline diff"
+  }
 };
 
 const es: Dictionary = {
@@ -251,7 +287,25 @@ const es: Dictionary = {
     title: "Limpia el texto sin subir el borrador.",
     tabs: ["Privado", "Determinista", "Exportable"]
   },
-  language: { label: "Cambiar idioma" }
+  language: { label: "Cambiar idioma" },
+  tools: {
+    analysisTitle: "Análisis de escritura",
+    aiScore: "Puntuación de «IA»",
+    levels: { low: "Parece humano", medium: "Señales mixtas", high: "Suena muy a IA" },
+    wordsAnalyzed: "palabras analizadas",
+    tellsTitle: "Indicios detectados",
+    noTells: "No se detectaron indicios claros de IA.",
+    disclaimer: "Comprobación heurística, ajustada para texto en inglés.",
+    estTokens: "Tokens aprox.",
+    tokensNote: "Aproximado — no exacto para facturación.",
+    shareButton: "Compartir resultado",
+    downloadCard: "Descargar tarjeta",
+    copyLink: "Copiar enlace",
+    linkCopied: "Enlace para compartir copiado al portapapeles.",
+    cardTagline: "Limpiado con Citation Cleaner",
+    liveClean: "Limpieza en vivo",
+    inlineDiff: "Diferencias en línea"
+  }
 };
 
 const fr: Dictionary = {
@@ -346,7 +400,25 @@ const fr: Dictionary = {
     title: "Nettoyez le texte sans téléverser le brouillon.",
     tabs: ["Privé", "Déterministe", "Exportable"]
   },
-  language: { label: "Changer de langue" }
+  language: { label: "Changer de langue" },
+  tools: {
+    analysisTitle: "Analyse de l'écriture",
+    aiScore: "Score « IA »",
+    levels: { low: "Style humain", medium: "Signaux mixtes", high: "Très IA" },
+    wordsAnalyzed: "mots analysés",
+    tellsTitle: "Indices détectés",
+    noTells: "Aucun indice évident d'IA détecté.",
+    disclaimer: "Analyse heuristique, optimisée pour l'anglais.",
+    estTokens: "Tokens estimés",
+    tokensNote: "Approximatif — non exact pour la facturation.",
+    shareButton: "Partager le résultat",
+    downloadCard: "Télécharger la carte",
+    copyLink: "Copier le lien",
+    linkCopied: "Lien de partage copié dans le presse-papiers.",
+    cardTagline: "Nettoyé avec Citation Cleaner",
+    liveClean: "Nettoyage en direct",
+    inlineDiff: "Diff en ligne"
+  }
 };
 
 const de: Dictionary = {
@@ -441,7 +513,25 @@ const de: Dictionary = {
     title: "Text bereinigen, ohne den Entwurf hochzuladen.",
     tabs: ["Privat", "Deterministisch", "Exportierbar"]
   },
-  language: { label: "Sprache ändern" }
+  language: { label: "Sprache ändern" },
+  tools: {
+    analysisTitle: "Text-Analyse",
+    aiScore: "KI-Wert",
+    levels: { low: "Menschlich", medium: "Gemischte Signale", high: "Sehr KI" },
+    wordsAnalyzed: "analysierte Wörter",
+    tellsTitle: "Erkannte Merkmale",
+    noTells: "Keine offensichtlichen KI-Merkmale gefunden.",
+    disclaimer: "Heuristische Prüfung, auf englischen Text abgestimmt.",
+    estTokens: "Geschätzte Tokens",
+    tokensNote: "Ungefähr — nicht abrechnungsgenau.",
+    shareButton: "Ergebnis teilen",
+    downloadCard: "Karte herunterladen",
+    copyLink: "Link kopieren",
+    linkCopied: "Freigabelink in die Zwischenablage kopiert.",
+    cardTagline: "Bereinigt mit Citation Cleaner",
+    liveClean: "Live-Bereinigung",
+    inlineDiff: "Inline-Diff"
+  }
 };
 
 const ja: Dictionary = {
@@ -536,7 +626,25 @@ const ja: Dictionary = {
     title: "下書きをアップロードせずに文章をクリーンに。",
     tabs: ["プライベート", "決定論的", "エクスポート可能"]
   },
-  language: { label: "言語を変更" }
+  language: { label: "言語を変更" },
+  tools: {
+    analysisTitle: "文章分析",
+    aiScore: "AI度スコア",
+    levels: { low: "人間らしい", medium: "混在", high: "かなりAI" },
+    wordsAnalyzed: "語を分析",
+    tellsTitle: "検出された特徴",
+    noTells: "明らかなAIの特徴は見つかりませんでした。",
+    disclaimer: "ヒューリスティック判定。英語テキスト向けに調整。",
+    estTokens: "推定トークン",
+    tokensNote: "概算です。請求額とは異なります。",
+    shareButton: "結果を共有",
+    downloadCard: "カードをダウンロード",
+    copyLink: "リンクをコピー",
+    linkCopied: "共有リンクをクリップボードにコピーしました。",
+    cardTagline: "Citation Cleaner でクリーン",
+    liveClean: "リアルタイム整形",
+    inlineDiff: "インライン差分"
+  }
 };
 
 const zh: Dictionary = {
@@ -631,7 +739,25 @@ const zh: Dictionary = {
     title: "清理文字，無需上傳草稿。",
     tabs: ["私密", "確定性", "可匯出"]
   },
-  language: { label: "變更語言" }
+  language: { label: "變更語言" },
+  tools: {
+    analysisTitle: "文字分析",
+    aiScore: "AI 程度評分",
+    levels: { low: "像真人", medium: "混合訊號", high: "非常像 AI" },
+    wordsAnalyzed: "個字已分析",
+    tellsTitle: "偵測到的特徵",
+    noTells: "未發現明顯的 AI 特徵。",
+    disclaimer: "啟發式檢測，針對英文文字調整。",
+    estTokens: "預估 token",
+    tokensNote: "概略值，非帳單精確值。",
+    shareButton: "分享結果",
+    downloadCard: "下載卡片",
+    copyLink: "複製連結",
+    linkCopied: "已將分享連結複製到剪貼簿。",
+    cardTagline: "由 Citation Cleaner 清理",
+    liveClean: "即時清理",
+    inlineDiff: "行內差異"
+  }
 };
 
 const ko: Dictionary = {
@@ -726,7 +852,25 @@ const ko: Dictionary = {
     title: "초안을 업로드하지 않고 문장을 정리하세요.",
     tabs: ["비공개", "결정론적", "내보내기 가능"]
   },
-  language: { label: "언어 변경" }
+  language: { label: "언어 변경" },
+  tools: {
+    analysisTitle: "문장 분석",
+    aiScore: "AI 정도 점수",
+    levels: { low: "사람 같음", medium: "혼합 신호", high: "매우 AI 같음" },
+    wordsAnalyzed: "개 단어 분석",
+    tellsTitle: "감지된 특징",
+    noTells: "뚜렷한 AI 특징을 찾지 못했습니다.",
+    disclaimer: "휴리스틱 검사, 영어 텍스트에 맞춰 조정됨.",
+    estTokens: "예상 토큰",
+    tokensNote: "근사치이며 청구 기준이 아닙니다.",
+    shareButton: "결과 공유",
+    downloadCard: "카드 다운로드",
+    copyLink: "링크 복사",
+    linkCopied: "공유 링크를 클립보드에 복사했습니다.",
+    cardTagline: "Citation Cleaner로 정리함",
+    liveClean: "실시간 정리",
+    inlineDiff: "인라인 차이"
+  }
 };
 
 const pt: Dictionary = {
@@ -821,7 +965,25 @@ const pt: Dictionary = {
     title: "Limpe o texto sem enviar o rascunho.",
     tabs: ["Privado", "Determinista", "Exportável"]
   },
-  language: { label: "Mudar idioma" }
+  language: { label: "Mudar idioma" },
+  tools: {
+    analysisTitle: "Análise de escrita",
+    aiScore: "Pontuação de «IA»",
+    levels: { low: "Parece humano", medium: "Sinais mistos", high: "Muito a IA" },
+    wordsAnalyzed: "palavras analisadas",
+    tellsTitle: "Indícios detectados",
+    noTells: "Nenhum indício claro de IA encontrado.",
+    disclaimer: "Verificação heurística, ajustada para texto em inglês.",
+    estTokens: "Tokens estimados",
+    tokensNote: "Aproximado — não exato para faturação.",
+    shareButton: "Partilhar resultado",
+    downloadCard: "Baixar cartão",
+    copyLink: "Copiar link",
+    linkCopied: "Link de partilha copiado para a área de transferência.",
+    cardTagline: "Limpo com Citation Cleaner",
+    liveClean: "Limpeza ao vivo",
+    inlineDiff: "Diff em linha"
+  }
 };
 
 const ar: Dictionary = {
@@ -916,7 +1078,25 @@ const ar: Dictionary = {
     title: "نظّف النص دون رفع المسودة.",
     tabs: ["خاص", "حتمي", "قابل للتصدير"]
   },
-  language: { label: "تغيير اللغة" }
+  language: { label: "تغيير اللغة" },
+  tools: {
+    analysisTitle: "تحليل الكتابة",
+    aiScore: "درجة «الذكاء الاصطناعي»",
+    levels: { low: "يشبه البشر", medium: "إشارات متباينة", high: "يبدو ذكاءً اصطناعيًا بشدة" },
+    wordsAnalyzed: "كلمة تم تحليلها",
+    tellsTitle: "العلامات المكتشفة",
+    noTells: "لم يُعثر على علامات واضحة للذكاء الاصطناعي.",
+    disclaimer: "فحص استدلالي، مضبوط للنص الإنجليزي.",
+    estTokens: "الرموز التقديرية",
+    tokensNote: "تقريبي — غير دقيق للفوترة.",
+    shareButton: "مشاركة النتيجة",
+    downloadCard: "تنزيل البطاقة",
+    copyLink: "نسخ الرابط",
+    linkCopied: "تم نسخ رابط المشاركة إلى الحافظة.",
+    cardTagline: "تم التنظيف باستخدام Citation Cleaner",
+    liveClean: "تنظيف فوري",
+    inlineDiff: "فرق ضمن النص"
+  }
 };
 
 const dictionaries: Record<Locale, Dictionary> = { en, es, fr, de, ja, zh, ko, pt, ar };

@@ -5,6 +5,34 @@ includes the local `andrej-karpathy-skills` guidance in `CLAUDE.md`, a
 Codex-facing `AGENTS.md`, and a small folder structure for context, plans,
 research, and local skills.
 
+## Citation Cleaner app
+
+A browser-local tool that strips citations, source trails, and tracking clutter
+from AI chatbot Markdown. Everything runs client-side — no uploads, no account.
+
+Features:
+
+- **9-language UI** with automatic browser-language detection and redirect.
+- **AI-ness analysis** — a deterministic, English-tuned score that flags common
+  AI tells (clichés, hedging, em-dash density), plus an approximate token count.
+- **Live clean**, **inline word-level diff**, persisted settings, and a
+  ⌘/Ctrl+Enter shortcut.
+- **Shareable result card** generated locally (stats only — content never leaves
+  the browser).
+- Installable as a PWA.
+
+### Public API
+
+`POST /api/clean` runs the same deterministic cleaner. CORS is open.
+
+```bash
+curl -X POST https://cleaner.tenten.dev/api/clean \
+  -H "Content-Type: application/json" \
+  -d '{"markdown": "Answer [1].\n\nSources:\n1. https://example.com", "provider": "perplexity", "intensity": "balanced"}'
+```
+
+`GET /api/clean` returns usage and the valid `provider` / `intensity` values.
+
 ## What Is Included
 
 - `CLAUDE.md`: project memory plus the Karpathy guidelines from the installed
