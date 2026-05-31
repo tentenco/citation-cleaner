@@ -2,8 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { EditorPane } from "@/components/EditorPane";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { RemovedSummary } from "@/components/RemovedSummary";
 import { Toolbar } from "@/components/Toolbar";
+import type { Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/dictionaries";
 import { cleanMarkdown } from "@/lib/cleaner/clean";
 import { sampleMarkdown, sampleScenarios } from "@/lib/cleaner/samples";
 import type { CleanOptions, CleanResult, Intensity, Provider } from "@/lib/cleaner/types";
@@ -32,12 +35,17 @@ function downloadMarkdown(markdown: string) {
   URL.revokeObjectURL(url);
 }
 
-export default function Page() {
+type CitationCleanerProps = {
+  locale: Locale;
+  dict: Dictionary;
+};
+
+export function CitationCleaner({ locale, dict }: CitationCleanerProps) {
   const [input, setInput] = useState("");
   const [provider, setProvider] = useState<Provider>("auto");
   const [intensity, setIntensity] = useState<Intensity>("balanced");
   const [result, setResult] = useState<CleanResult>(emptyResult);
-  const [status, setStatus] = useState("Paste AI Markdown, clean locally, copy the publishable version.");
+  const [status, setStatus] = useState(dict.status.initial);
 
   const options = useMemo<CleanOptions>(
     () => ({
@@ -50,11 +58,7 @@ export default function Page() {
   function handleClean() {
     const nextResult = cleanMarkdown(input, options);
     setResult(nextResult);
-    setStatus(
-      nextResult.output
-        ? "Cleaned locally. Review the output before publishing."
-        : "Nothing to clean yet."
-    );
+    setStatus(nextResult.output ? dict.status.cleaned : dict.status.nothing);
   }
 
   async function handleCopy() {
@@ -63,7 +67,7 @@ export default function Page() {
     }
 
     await navigator.clipboard?.writeText(result.output);
-    setStatus("Cleaned Markdown copied to clipboard.");
+    setStatus(dict.status.copied);
   }
 
   function handleDownload() {
@@ -72,20 +76,20 @@ export default function Page() {
     }
 
     downloadMarkdown(result.output);
-    setStatus("Downloaded cleaned-markdown.md.");
+    setStatus(dict.status.downloaded);
   }
 
   function handleReset() {
     setInput("");
     setResult(emptyResult);
-    setStatus("Paste AI Markdown, clean locally, copy the publishable version.");
+    setStatus(dict.status.initial);
   }
 
   function loadSample() {
     setInput(sampleMarkdown);
     const nextResult = cleanMarkdown(sampleMarkdown, options);
     setResult(nextResult);
-    setStatus("Sample loaded and cleaned locally.");
+    setStatus(dict.status.sampleLoaded);
   }
 
   function loadScenario(index: number) {
@@ -100,39 +104,43 @@ export default function Page() {
     setIntensity(scenario.intensity);
     setInput(scenario.markdown);
     setResult(nextResult);
-    setStatus(`${scenario.title} loaded. The output is ready to review.`);
+    const name = dict.samples.scenarios[scenario.id]?.name ?? scenario.title;
+    setStatus(dict.status.scenarioLoaded.replace("{name}", name));
   }
 
   return (
     <>
       <a className="skip-link" href="#workspace">
-        Skip to cleaner
+        {dict.skipLink}
       </a>
 
       <div className="utility-strip" aria-label="Service details">
-        <span>Browser-local</span>
-        <span>No account required</span>
-        <span>Markdown in, Markdown out</span>
+        {dict.utility.map((item) => (
+          <span key={item}>{item}</span>
+        ))}
       </div>
 
       <nav className="nav-bar-top" aria-label="Primary">
-        <a className="wordmark" href="#workspace" aria-label="Citation Cleaner home">
+        <a className="wordmark" href="#workspace" aria-label={dict.nav.home}>
           CC
         </a>
         <div className="nav-links" aria-label="Page sections">
           <a className="nav-link active" href="#workspace">
-            Cleaner
+            {dict.nav.cleaner}
           </a>
           <a className="nav-link" href="#samples">
-            Samples
+            {dict.nav.samples}
           </a>
           <a className="nav-link" href="#report">
-            Report
+            {dict.nav.report}
           </a>
         </div>
-        <button type="button" className="nav-cta" onClick={loadSample}>
-          Load sample
-        </button>
+        <div className="nav-right">
+          <LanguageSwitcher locale={locale} label={dict.language.label} />
+          <button type="button" className="nav-cta" onClick={loadSample}>
+            {dict.nav.loadSample}
+          </button>
+        </div>
       </nav>
 
       <main className="app-shell">
@@ -142,33 +150,36 @@ export default function Page() {
             <span className="chevron-decoration chevron-right" aria-hidden="true" />
 
             <div className="header-main">
-              <p className="brand-mark">Citation Cleaner</p>
-              <h1>Make AI copy publishable.</h1>
-              <p className="header-copy">
-                Strip citations, source trails, and tracking clutter from chatbot Markdown locally.
-              </p>
+              <p className="brand-mark">{dict.hero.brand}</p>
+              <h1>{dict.hero.title}</h1>
+              <p className="header-copy">{dict.hero.copy}</p>
               <div className="proof-strip" aria-label="Product guarantees">
-                <span>0 uploads</span>
-                <span>Deterministic rules</span>
-                <span>Markdown-safe</span>
+                {dict.hero.proof.map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
               </div>
             </div>
 
             <div id="samples" className="sample-lab" aria-label="Fast start samples">
-              <p>Fast start</p>
+              <p>{dict.samples.fastStart}</p>
               <div className="sample-grid">
-                {sampleScenarios.map((scenario, index) => (
-                  <button
-                    key={scenario.id}
-                    type="button"
-                    className="scenario-card"
-                    onClick={() => loadScenario(index)}
-                    aria-label={`Try ${scenario.title}`}
-                  >
-                    <span>{scenario.title.replace(" sample", "")}</span>
-                    <small>{scenario.description}</small>
-                  </button>
-                ))}
+                {sampleScenarios.map((scenario, index) => {
+                  const text = dict.samples.scenarios[scenario.id];
+                  const name = text?.name ?? scenario.title;
+                  const description = text?.description ?? scenario.description;
+                  return (
+                    <button
+                      key={scenario.id}
+                      type="button"
+                      className="scenario-card"
+                      onClick={() => loadScenario(index)}
+                      aria-label={`${dict.samples.tryLabel} ${name}`}
+                    >
+                      <span>{name}</span>
+                      <small>{description}</small>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -176,20 +187,21 @@ export default function Page() {
 
         <section className="growth-rail" aria-label="Workflow">
           <div>
-            <strong>Paste</strong>
-            <span>Keep code and links intact.</span>
+            <strong>{dict.workflow.paste.title}</strong>
+            <span>{dict.workflow.paste.desc}</span>
           </div>
           <div>
-            <strong>Clean</strong>
-            <span>Remove the artifacts users notice first.</span>
+            <strong>{dict.workflow.clean.title}</strong>
+            <span>{dict.workflow.clean.desc}</span>
           </div>
           <div>
-            <strong>Copy</strong>
-            <span>Leave with publish-ready Markdown.</span>
+            <strong>{dict.workflow.copy.title}</strong>
+            <span>{dict.workflow.copy.desc}</span>
           </div>
         </section>
 
         <Toolbar
+          dict={dict.toolbar}
           provider={provider}
           intensity={intensity}
           canUseOutput={result.output.length > 0}
@@ -209,33 +221,35 @@ export default function Page() {
           <div className="editors-grid">
             <EditorPane
               id="raw-markdown"
-              label="Raw Markdown"
-              helper="Paste from ChatGPT, Claude, Gemini, Perplexity, DeepSeek, Kimi, or AI Overview."
+              label={dict.editors.rawLabel}
+              helper={dict.editors.rawHelper}
+              countUnit={dict.editors.chars}
               value={input}
-              placeholder="Paste AI-copied Markdown here..."
+              placeholder={dict.editors.rawPlaceholder}
               onChange={setInput}
             />
             <EditorPane
               id="cleaned-markdown"
-              label="Cleaned Markdown"
-              helper="Review the deterministic output before copying or downloading."
+              label={dict.editors.cleanedLabel}
+              helper={dict.editors.cleanedHelper}
+              countUnit={dict.editors.chars}
               value={result.output}
-              placeholder="Cleaned Markdown will appear here."
+              placeholder={dict.editors.cleanedPlaceholder}
               readOnly
             />
           </div>
-          <RemovedSummary result={result} inputLength={input.length} />
+          <RemovedSummary dict={dict.summary} result={result} inputLength={input.length} />
         </div>
 
         <section className="help-band-dark" aria-label="Local publishing assurance">
           <div>
-            <p className="eyebrow">Local workflow</p>
-            <h2>Clean copy without uploading the draft.</h2>
+            <p className="eyebrow">{dict.helpBand.eyebrow}</p>
+            <h2>{dict.helpBand.title}</h2>
           </div>
           <div className="assurance-tabs" aria-label="Assurances">
-            <span>Private</span>
-            <span>Deterministic</span>
-            <span>Exportable</span>
+            {dict.helpBand.tabs.map((item) => (
+              <span key={item}>{item}</span>
+            ))}
           </div>
         </section>
       </main>
