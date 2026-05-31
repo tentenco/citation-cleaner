@@ -3,6 +3,7 @@ type EditorPaneProps = {
   label: string;
   value: string;
   helper: string;
+  countUnit: string;
   placeholder?: string;
   readOnly?: boolean;
   onChange?: (value: string) => void;
@@ -13,6 +14,7 @@ export function EditorPane({
   label,
   value,
   helper,
+  countUnit,
   placeholder,
   readOnly = false,
   onChange
@@ -26,7 +28,9 @@ export function EditorPane({
           </label>
           <p className="pane-helper">{helper}</p>
         </div>
-        <span className="pane-count">{value.length.toLocaleString()} chars</span>
+        <span className="pane-count">
+          {value.length.toLocaleString()} {countUnit}
+        </span>
       </div>
       <textarea
         id={id}

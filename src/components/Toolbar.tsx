@@ -5,15 +5,12 @@ import {
   DownloadSimple,
   LockSimple
 } from "@phosphor-icons/react";
-import {
-  intensities,
-  intensityLabels,
-  providerLabels,
-  providers
-} from "@/lib/cleaner/presets";
+import { intensities, providerLabels, providers } from "@/lib/cleaner/presets";
+import type { Dictionary } from "@/i18n/dictionaries";
 import type { Intensity, Provider } from "@/lib/cleaner/types";
 
 type ToolbarProps = {
+  dict: Dictionary["toolbar"];
   provider: Provider;
   intensity: Intensity;
   canUseOutput: boolean;
@@ -26,6 +23,7 @@ type ToolbarProps = {
 };
 
 export function Toolbar({
+  dict,
   provider,
   intensity,
   canUseOutput,
@@ -37,9 +35,9 @@ export function Toolbar({
   onReset
 }: ToolbarProps) {
   return (
-    <section className="toolbar" aria-label="Cleaner controls">
+    <section className="toolbar" aria-label={dict.controls}>
       <div className="control-group">
-        <label htmlFor="source-provider">Source</label>
+        <label htmlFor="source-provider">{dict.source}</label>
         <select
           id="source-provider"
           value={provider}
@@ -54,7 +52,7 @@ export function Toolbar({
       </div>
 
       <fieldset className="intensity-group">
-        <legend>Cleanup intensity</legend>
+        <legend>{dict.intensityLegend}</legend>
         <div className="segmented-control">
           {intensities.map((item) => (
             <button
@@ -64,34 +62,34 @@ export function Toolbar({
               aria-pressed={item === intensity}
               onClick={() => onIntensityChange(item)}
             >
-              {intensityLabels[item]}
+              {dict.intensities[item]}
             </button>
           ))}
         </div>
       </fieldset>
 
-      <div className="actions" aria-label="Output actions">
+      <div className="actions" aria-label={dict.outputActions}>
         <button type="button" className="primary-action" onClick={onClean}>
           <Broom aria-hidden="true" size={18} weight="bold" />
-          Clean
+          {dict.clean}
         </button>
         <button type="button" onClick={onCopy} disabled={!canUseOutput}>
           <ClipboardText aria-hidden="true" size={18} weight="bold" />
-          Copy output
+          {dict.copyOutput}
         </button>
         <button type="button" onClick={onDownload} disabled={!canUseOutput}>
           <DownloadSimple aria-hidden="true" size={18} weight="bold" />
-          Download .md
+          {dict.downloadMd}
         </button>
         <button type="button" onClick={onReset}>
           <ArrowCounterClockwise aria-hidden="true" size={18} weight="bold" />
-          Reset
+          {dict.reset}
         </button>
       </div>
 
       <div className="privacy-pill">
         <LockSimple aria-hidden="true" size={17} weight="bold" />
-        Local only
+        {dict.localOnly}
       </div>
     </section>
   );

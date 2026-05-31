@@ -2,7 +2,18 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import Page from "./page";
+import { CitationCleaner } from "./CitationCleaner";
+import { getDictionary } from "@/i18n/dictionaries";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() })
+}));
+
+const en = getDictionary("en");
+
+function renderCleaner() {
+  return render(<CitationCleaner locale="en" dict={en} />);
+}
 
 describe("Citation Cleaner workbench", () => {
   afterEach(() => {
@@ -19,7 +30,7 @@ describe("Citation Cleaner workbench", () => {
       }
     });
 
-    render(<Page />);
+    renderCleaner();
 
     const input = screen.getByLabelText("Raw Markdown");
     await user.clear(input);
@@ -37,9 +48,9 @@ describe("Citation Cleaner workbench", () => {
   test("loads a provider sample to shorten time to first clean output", async () => {
     const user = userEvent.setup();
 
-    render(<Page />);
+    renderCleaner();
 
-    await user.click(screen.getByRole("button", { name: "Try Perplexity sample" }));
+    await user.click(screen.getByRole("button", { name: "Try Perplexity" }));
 
     expect((screen.getByLabelText("Raw Markdown") as HTMLTextAreaElement).value).toContain(
       "Sources:"
