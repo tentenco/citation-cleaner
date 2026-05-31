@@ -12,3 +12,6 @@ coverage/
 *.log
 screenlog.*
 .vercel
+
+# Chrome extension build output
+extension/dist
