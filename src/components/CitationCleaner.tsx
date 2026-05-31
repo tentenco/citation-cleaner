@@ -1,15 +1,22 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AnalysisPanel } from "@/components/AnalysisPanel";
+import { DiffView } from "@/components/DiffView";
 import { EditorPane } from "@/components/EditorPane";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { RemovedSummary } from "@/components/RemovedSummary";
+import { ShareCard } from "@/components/ShareCard";
 import { Toolbar } from "@/components/Toolbar";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { analyzeText } from "@/lib/analyzer/detect";
 import { cleanMarkdown } from "@/lib/cleaner/clean";
 import { sampleMarkdown, sampleScenarios } from "@/lib/cleaner/samples";
+import { estimateTokens } from "@/lib/tokens/estimate";
 import type { CleanOptions, CleanResult, Intensity, Provider } from "@/lib/cleaner/types";
+
+const SETTINGS_KEY = "cc:settings";
 
 const emptyResult: CleanResult = {
   output: "",
@@ -44,6 +51,8 @@ export function CitationCleaner({ locale, dict }: CitationCleanerProps) {
   const [input, setInput] = useState("");
   const [provider, setProvider] = useState<Provider>("auto");
   const [intensity, setIntensity] = useState<Intensity>("balanced");
+  const [liveClean, setLiveClean] = useState(false);
+  const [showDiff, setShowDiff] = useState(false);
   const [result, setResult] = useState<CleanResult>(emptyResult);
   const [status, setStatus] = useState(dict.status.initial);
 
@@ -55,11 +64,78 @@ export function CitationCleaner({ locale, dict }: CitationCleanerProps) {
     [intensity, provider]
   );
 
-  function handleClean() {
+  const analysis = useMemo(() => analyzeText(input), [input]);
+  const tokens = useMemo(() => estimateTokens(input), [input]);
+
+  const totalRemoved = Object.values(result.stats).reduce((sum, value) => sum + value, 0);
+  const reductionPercent =
+    input.length > 0
+      ? Math.round((Math.max(0, input.length - result.output.length) / input.length) * 100)
+      : 0;
+  const shorterText =
+    input.length > 0 ? dict.summary.shorter.replace("{pct}", String(reductionPercent)) : dict.summary.noInput;
+
+  // Load persisted preferences after mount to avoid hydration mismatches.
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(SETTINGS_KEY);
+      if (!raw) {
+        return;
+      }
+      const saved = JSON.parse(raw) as Partial<{
+        provider: Provider;
+        intensity: Intensity;
+        liveClean: boolean;
+        showDiff: boolean;
+      }>;
+      if (saved.provider) setProvider(saved.provider);
+      if (saved.intensity) setIntensity(saved.intensity);
+      if (typeof saved.liveClean === "boolean") setLiveClean(saved.liveClean);
+      if (typeof saved.showDiff === "boolean") setShowDiff(saved.showDiff);
+    } catch {
+      // Ignore malformed storage.
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        SETTINGS_KEY,
+        JSON.stringify({ provider, intensity, liveClean, showDiff })
+      );
+    } catch {
+      // Ignore storage write failures (private mode, quota).
+    }
+  }, [provider, intensity, liveClean, showDiff]);
+
+  const runClean = useCallback(() => {
     const nextResult = cleanMarkdown(input, options);
     setResult(nextResult);
     setStatus(nextResult.output ? dict.status.cleaned : dict.status.nothing);
-  }
+  }, [input, options, dict.status]);
+
+  // Live clean: re-run on a short debounce without touching the status line.
+  useEffect(() => {
+    if (!liveClean) {
+      return;
+    }
+    const id = setTimeout(() => {
+      setResult(cleanMarkdown(input, options));
+    }, 300);
+    return () => clearTimeout(id);
+  }, [liveClean, input, options]);
+
+  // Keyboard shortcut: ⌘/Ctrl + Enter to clean.
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+        event.preventDefault();
+        runClean();
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [runClean]);
 
   async function handleCopy() {
     if (!result.output) {
@@ -207,11 +283,30 @@ export function CitationCleaner({ locale, dict }: CitationCleanerProps) {
           canUseOutput={result.output.length > 0}
           onProviderChange={setProvider}
           onIntensityChange={setIntensity}
-          onClean={handleClean}
+          onClean={runClean}
           onCopy={handleCopy}
           onDownload={handleDownload}
           onReset={handleReset}
         />
+
+        <div className="view-controls" role="group" aria-label="View options">
+          <button
+            type="button"
+            className={liveClean ? "toggle-chip active" : "toggle-chip"}
+            aria-pressed={liveClean}
+            onClick={() => setLiveClean((value) => !value)}
+          >
+            {dict.tools.liveClean}
+          </button>
+          <button
+            type="button"
+            className={showDiff ? "toggle-chip active" : "toggle-chip"}
+            aria-pressed={showDiff}
+            onClick={() => setShowDiff((value) => !value)}
+          >
+            {dict.tools.inlineDiff}
+          </button>
+        </div>
 
         <p className="status-line" aria-live="polite">
           {status}
@@ -228,18 +323,51 @@ export function CitationCleaner({ locale, dict }: CitationCleanerProps) {
               placeholder={dict.editors.rawPlaceholder}
               onChange={setInput}
             />
-            <EditorPane
-              id="cleaned-markdown"
-              label={dict.editors.cleanedLabel}
-              helper={dict.editors.cleanedHelper}
-              countUnit={dict.editors.chars}
-              value={result.output}
-              placeholder={dict.editors.cleanedPlaceholder}
-              readOnly
-            />
+            {showDiff ? (
+              <section className="editor-pane" aria-label={`${dict.editors.cleanedLabel} pane`}>
+                <div className="pane-header">
+                  <div>
+                    <span className="pane-label">{dict.editors.cleanedLabel}</span>
+                    <p className="pane-helper">{dict.editors.cleanedHelper}</p>
+                  </div>
+                  <span className="pane-count">
+                    {result.output.length.toLocaleString()} {dict.editors.chars}
+                  </span>
+                </div>
+                <DiffView before={input} after={result.output} label={dict.tools.inlineDiff} />
+              </section>
+            ) : (
+              <EditorPane
+                id="cleaned-markdown"
+                label={dict.editors.cleanedLabel}
+                helper={dict.editors.cleanedHelper}
+                countUnit={dict.editors.chars}
+                value={result.output}
+                placeholder={dict.editors.cleanedPlaceholder}
+                readOnly
+              />
+            )}
           </div>
-          <RemovedSummary dict={dict.summary} result={result} inputLength={input.length} />
+          <div className="summary-column">
+            <RemovedSummary dict={dict.summary} result={result} inputLength={input.length} />
+            {result.output ? (
+              <ShareCard
+                tools={dict.tools}
+                tagline={dict.tools.cardTagline}
+                totalRemoved={totalRemoved}
+                removedLabel={dict.summary.removed}
+                shorterText={shorterText}
+                aiScoreLabel={dict.tools.aiScore}
+                aiScore={analysis.score}
+                onStatus={setStatus}
+              />
+            ) : null}
+          </div>
         </div>
+
+        {input.length > 0 ? (
+          <AnalysisPanel tools={dict.tools} analysis={analysis} tokens={tokens} />
+        ) : null}
 
         <section className="help-band-dark" aria-label="Local publishing assurance">
           <div>

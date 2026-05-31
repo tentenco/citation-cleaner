@@ -814,11 +814,233 @@ button:disabled {
   color: var(--colors-on-ink);
 }
 
+.view-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.toggle-chip {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border-color: var(--colors-steel);
+  letter-spacing: 0.7px;
+}
+
+.toggle-chip.active {
+  border-color: var(--colors-ink);
+  background: var(--colors-ink);
+  color: var(--colors-on-ink);
+}
+
+.summary-column {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.share-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 16px;
+  background: var(--colors-paper);
+  box-shadow: var(--shadow-soft-lift);
+  padding: 16px;
+}
+
+.share-card button {
+  flex: 1 1 auto;
+  min-height: 44px;
+  padding: 0 14px;
+}
+
+.diff-view {
+  flex: 1;
+  min-height: 430px;
+  margin: 0;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--colors-canvas);
+  color: var(--colors-ink);
+  padding: 24px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", ui-monospace, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.diff-removed {
+  background: #fde4e4;
+  color: var(--colors-bloom-deep);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.analysis-panel {
+  margin-top: 24px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 16px;
+  background: var(--colors-paper);
+  box-shadow: var(--shadow-soft-lift);
+  padding: 24px;
+}
+
+.analysis-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.analysis-disclaimer {
+  margin: 0;
+  color: var(--colors-graphite);
+  font-size: 0.8125rem;
+}
+
+.analysis-metrics {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.ai-gauge {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 4px;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+
+.ai-gauge.ai-low {
+  background: #e7f6ec;
+  color: #186a3b;
+}
+
+.ai-gauge.ai-medium {
+  background: #fdf3e0;
+  color: #8a5300;
+}
+
+.ai-gauge.ai-high {
+  background: #fde4e4;
+  color: var(--colors-bloom-deep);
+}
+
+.ai-gauge-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.ai-gauge-score {
+  font-size: 3.25rem;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.ai-gauge-level {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.analysis-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.analysis-stats div {
+  border: 1px solid var(--colors-hairline);
+  border-radius: 16px;
+  background: var(--colors-cloud);
+  padding: 16px;
+}
+
+.analysis-stats dt {
+  color: var(--colors-graphite);
+  font-size: 0.8125rem;
+}
+
+.analysis-stats dd {
+  margin: 8px 0 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.analysis-tells h4 {
+  margin: 0 0 12px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--colors-charcoal);
+}
+
+.tell-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--colors-hairline);
+  border-radius: 999px;
+  background: var(--colors-canvas);
+  padding: 6px 12px;
+  font-size: 0.875rem;
+}
+
+.tell-count {
+  color: var(--colors-graphite);
+  font-variant-numeric: tabular-nums;
+}
+
+.tell-cliche {
+  border-color: #f0c9c9;
+}
+
+.tell-hedging {
+  border-color: #f0dcae;
+}
+
+.tell-empty {
+  margin: 0;
+  color: var(--colors-graphite);
+}
+
+.analysis-note {
+  margin: 16px 0 0;
+  color: var(--colors-graphite);
+  font-size: 0.8125rem;
+}
+
 @media (max-width: 1180px) {
   .hero-promo-card,
   .toolbar,
   .workspace-grid,
   .editors-grid,
+  .analysis-metrics,
   .help-band-dark {
     grid-template-columns: 1fr;
   }
