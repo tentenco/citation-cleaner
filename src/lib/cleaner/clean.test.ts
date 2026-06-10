@@ -23,6 +23,40 @@ describe("cleanMarkdown", () => {
     expect(result.stats.trackingLinks).toBe(1);
   });
 
+  test("converts literal \\n\\n escape sequences into real paragraph breaks", () => {
+    const input =
+      "...800V DC mass production. \\n\\nYesterday, SemiAnalysis released a report. \\n\\nHowever, NVIDIA pushed back.";
+
+    const result = cleanMarkdown(input, {
+      intensity: "safe",
+      provider: "auto"
+    });
+
+    expect(result.output).toBe(
+      [
+        "...800V DC mass production.",
+        "",
+        "Yesterday, SemiAnalysis released a report.",
+        "",
+        "However, NVIDIA pushed back."
+      ].join("\n")
+    );
+    expect(result.output).not.toContain("\\n");
+    expect(result.stats.blankLines).toBe(2);
+  });
+
+  test("leaves literal \\n escape sequences inside code untouched", () => {
+    const input = "Use `printf \"a\\nb\"` to print. \\n\\nNext paragraph.";
+
+    const result = cleanMarkdown(input, {
+      intensity: "safe",
+      provider: "auto"
+    });
+
+    expect(result.output).toContain('`printf "a\\nb"`');
+    expect(result.output).toContain("Next paragraph.");
+  });
+
   test("removes Perplexity-style source sections in balanced mode", () => {
     const input = [
       "Perplexity often appends source lists after the answer.",

@@ -24,6 +24,23 @@ function removeLines(input: string, patterns: RegExp[]) {
 
 export const cleanupRules: CleanupRule[] = [
   {
+    id: "literal-newline-escapes",
+    label: "Literal \\n escape sequences",
+    category: "blankLines",
+    intensity: "safe",
+    providers: ["common"],
+    apply(input) {
+      let count = 0;
+      const output = input.replace(/(?:\\n)+/g, (match) => {
+        count += 1;
+        const breaks = match.length / 2;
+        return "\n".repeat(breaks);
+      });
+
+      return { output, count };
+    }
+  },
+  {
     id: "footnote-definitions",
     label: "Markdown footnote definitions",
     category: "footnotes",
