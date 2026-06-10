@@ -7,8 +7,11 @@ export type DiffSegment = {
 const MAX_TOKENS = 4000;
 
 function tokenize(input: string): string[] {
-  // Keep whitespace runs as their own tokens so we can rebuild text exactly.
-  return input.split(/(\s+)/).filter((token) => token.length > 0);
+  // Keep whitespace runs — and literal \n escape sequences — as their own
+  // tokens. The cleaner rewrites literal "\n" into real newlines, which shifts
+  // token boundaries; splitting them out here keeps the before/after aligned so
+  // the diff highlights only the escape, not the surrounding (unspaced) text.
+  return input.split(/(\s+|(?:\\n)+)/).filter((token) => token.length > 0);
 }
 
 /**
