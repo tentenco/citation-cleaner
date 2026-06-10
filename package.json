@@ -8,7 +8,7 @@
     "start": "next start",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "build:extension": "node extension/scripts/make-icons.mjs && esbuild extension/src/popup.ts extension/src/background.ts --bundle --format=esm --target=es2022 --outdir=extension/dist",
+    "build:extension": "node extension/scripts/make-icons.mjs && esbuild extension/src/background.ts --bundle --format=esm --target=es2022 --outdir=extension/dist",
     "typecheck:extension": "tsc -p extension/tsconfig.json --noEmit"
   },
   "dependencies": {
