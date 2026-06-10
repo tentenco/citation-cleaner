@@ -1,26 +1,27 @@
 # Citation Cleaner — Chrome extension
 
-A Manifest V3 extension that runs the **same deterministic cleaner as the web
-app, entirely locally**. No network calls, no account — the cleaning logic is
-bundled straight from `src/lib/cleaner`, so there is a single source of truth.
+A Manifest V3 **thin launcher** for the web app at
+[cleaner.tenten.dev](https://cleaner.tenten.dev). The extension holds **no
+cleaning logic** — it just opens the web app, which is the single source of
+truth. Every web deploy updates the extension's behaviour instantly: no
+rebuild, no re-publish, no reinstall.
 
 ## Features
 
-- **Popup cleaner** — paste text, pick a source + intensity, clean, and copy.
-  Settings persist via `chrome.storage`. ⌘/Ctrl + Enter cleans.
-- **Right-click "Clean selected text"** — select text on any page, clean it,
-  and the result is copied to your clipboard with a notification of how many
-  artifacts were removed.
-- **Keyboard shortcut** — ⌘/Ctrl + Shift + L opens the popup.
+- **Toolbar button / ⌘·Ctrl + Shift + L** — opens the web app in a new tab.
+- **Right-click "Clean selected text"** — opens the web app with the selection
+  prefilled and already cleaned. The text rides in the URL **hash**
+  (`#text=…`), which browsers never send to the server, so it stays on your
+  device and is cleaned client-side.
 
 ## Build
 
-The popup and background scripts are TypeScript bundled with esbuild; the cleaner
-library is pulled in from the app's `src/lib/cleaner`.
+Only the tiny background service worker is bundled (no app logic ships in the
+extension).
 
 ```bash
 npm install
-npm run build:extension      # generates icons + dist/popup.js + dist/background.js
+npm run build:extension      # generates icons + dist/background.js
 npm run typecheck:extension  # optional: type-check against @types/chrome
 ```
 
@@ -35,11 +36,13 @@ npm run typecheck:extension  # optional: type-check against @types/chrome
 ## Packaging for the Chrome Web Store
 
 Zip the `extension/` folder *after* building (it must contain `manifest.json`,
-`popup.html`, `popup.css`, `icons/`, and `dist/`). Upload the zip in the Web
-Store developer dashboard.
+`icons/`, and `dist/`). Upload the zip in the Web Store developer dashboard.
+Because the cleaning logic lives on the web, you only need to re-publish when
+the launcher itself changes — not for cleaner updates.
 
 ## Privacy
 
-All processing happens on-device. The extension requests `contextMenus`,
-`activeTab`, `scripting` (to copy cleaned text into the page), and
-`notifications`. It never sends your text anywhere.
+The extension only requests `contextMenus`. Your selected text is passed to the
+web app through the URL hash, which is never transmitted to the server, and the
+web app cleans it entirely in your browser. Opening the app loads its static
+assets from cleaner.tenten.dev; your text is never uploaded.

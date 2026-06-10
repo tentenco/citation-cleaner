@@ -108,6 +108,33 @@ export function CitationCleaner({ locale, dict }: CitationCleanerProps) {
     }
   }, [provider, intensity, liveClean, showDiff]);
 
+  // Prefill from a URL hash (e.g. the browser extension opens the app with a
+  // selection: "#text=..."). The hash is never sent to the server, so the text
+  // stays on-device. Clear it afterwards so a refresh does not re-run.
+  useEffect(() => {
+    const match = window.location.hash.match(/[#&]text=([^&]*)/);
+    if (!match) {
+      return;
+    }
+
+    let text = match[1];
+    try {
+      text = decodeURIComponent(match[1]);
+    } catch {
+      // Keep the raw value if it is not valid percent-encoding.
+    }
+    if (!text) {
+      return;
+    }
+
+    setInput(text);
+    setResult(cleanMarkdown(text, options));
+    setStatus(dict.status.cleaned);
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+    // Mount-only: consume the incoming hash once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const runClean = useCallback(() => {
     const nextResult = cleanMarkdown(input, options);
     setResult(nextResult);

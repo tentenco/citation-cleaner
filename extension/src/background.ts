@@ -1,5 +1,8 @@
-import { cleanMarkdown } from "../../src/lib/cleaner/clean";
+// Thin launcher: the extension holds no cleaning logic. It opens the web app
+// (cleaner.tenten.dev), which is the single source of truth, so every web
+// deploy updates the extension instantly — no rebuild or reinstall needed.
 
+const WEB_APP_URL = "https://cleaner.tenten.dev/";
 const MENU_ID = "cc-clean-selection";
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -10,49 +13,18 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId !== MENU_ID || !info.selectionText || !tab?.id) {
+// Toolbar click (and the ⌘/Ctrl+Shift+L command) open the web app.
+chrome.action.onClicked.addListener(() => {
+  chrome.tabs.create({ url: WEB_APP_URL });
+});
+
+// Right-click a selection: open the web app with the text prefilled. The text
+// rides in the URL hash, which browsers never send to the server, so it stays
+// on-device and is cleaned client-side.
+chrome.contextMenus.onClicked.addListener((info) => {
+  if (info.menuItemId !== MENU_ID || !info.selectionText) {
     return;
   }
 
-  const result = cleanMarkdown(info.selectionText, {
-    provider: "auto",
-    intensity: "balanced"
-  });
-  const removed = Object.values(result.stats).reduce((sum, value) => sum + value, 0);
-
-  // Write the cleaned text to the clipboard from within the page (user gesture).
-  try {
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: copyToClipboard,
-      args: [result.output]
-    });
-  } catch {
-    // Some pages (chrome://, web store) block injection — fall back to a notice only.
-  }
-
-  chrome.notifications.create({
-    type: "basic",
-    iconUrl: chrome.runtime.getURL("icons/icon128.png"),
-    title: "Citation Cleaner",
-    message:
-      removed > 0
-        ? `Cleaned & copied — ${removed} artifact${removed === 1 ? "" : "s"} removed.`
-        : "Cleaned & copied. Nothing to remove."
-  });
+  chrome.tabs.create({ url: `${WEB_APP_URL}#text=${encodeURIComponent(info.selectionText)}` });
 });
-
-// Injected into the active page; must be fully self-contained.
-function copyToClipboard(text: string) {
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  textarea.style.position = "fixed";
-  textarea.style.top = "-1000px";
-  textarea.style.opacity = "0";
-  document.body.append(textarea);
-  textarea.focus();
-  textarea.select();
-  document.execCommand("copy");
-  textarea.remove();
-}
