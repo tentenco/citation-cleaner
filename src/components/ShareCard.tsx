@@ -27,41 +27,47 @@ function renderCard(props: ShareCardProps): HTMLCanvasElement {
     return canvas;
   }
 
-  ctx.fillStyle = "#1a1a1a";
+  // Deep navy ground with a soft aurora glow — matches the app's identity.
+  ctx.fillStyle = "#041e49";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // Accent chevron strip on the right.
-  ctx.fillStyle = "#024ad8";
-  ctx.beginPath();
-  ctx.moveTo(WIDTH - 220, 0);
-  ctx.lineTo(WIDTH, 0);
-  ctx.lineTo(WIDTH - 120, HEIGHT);
-  ctx.lineTo(WIDTH - 340, HEIGHT);
-  ctx.closePath();
-  ctx.fill();
+  const glow = ctx.createRadialGradient(WIDTH - 160, 90, 0, WIDTH - 160, 90, 480);
+  glow.addColorStop(0, "rgba(139, 123, 240, 0.45)");
+  glow.addColorStop(1, "rgba(139, 123, 240, 0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  // Aurora strip across the top.
+  const aurora = ctx.createLinearGradient(0, 0, WIDTH, 0);
+  aurora.addColorStop(0, "#1b6ef3");
+  aurora.addColorStop(0.35, "#3f8cf5");
+  aurora.addColorStop(0.7, "#8b7bf0");
+  aurora.addColorStop(1, "#c86bd8");
+  ctx.fillStyle = aurora;
+  ctx.fillRect(0, 0, WIDTH, 8);
 
   const family = "Arial, system-ui, sans-serif";
   ctx.textBaseline = "alphabetic";
 
-  ctx.fillStyle = "#296ef9";
+  ctx.fillStyle = "#8ab4f8";
   ctx.font = `700 30px ${family}`;
   ctx.fillText(props.tagline, 80, 130);
 
   ctx.fillStyle = "#ffffff";
-  ctx.font = `700 220px ${family}`;
+  ctx.font = `600 220px ${family}`;
   ctx.fillText(String(props.totalRemoved), 76, 360);
 
-  ctx.fillStyle = "#c2c2c2";
+  ctx.fillStyle = "rgba(255, 255, 255, 0.66)";
   ctx.font = `400 40px ${family}`;
   ctx.fillText(props.removedLabel, 80, 420);
 
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = "#e8eaed";
   ctx.font = `600 44px ${family}`;
   ctx.fillText(props.shorterText, 80, 500);
-  ctx.fillStyle = "#c8f04a";
+  ctx.fillStyle = "#b69df8";
   ctx.fillText(`${props.aiScoreLabel}: ${props.aiScore}`, 80, 560);
 
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
   ctx.font = `700 28px ${family}`;
   ctx.fillText(DOMAIN, 80, 610);
 

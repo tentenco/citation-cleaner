@@ -12,6 +12,7 @@ coverage/
 *.log
 screenlog.*
 .vercel
+*.tsbuildinfo
 
 # Chrome extension build output
 extension/dist

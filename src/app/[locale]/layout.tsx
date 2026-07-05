@@ -1,19 +1,24 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
-import { Manrope } from "next/font/google";
+import { Figtree, Roboto_Mono } from "next/font/google";
 import "../globals.css";
 import { isLocale, locales, localeMeta, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
-const manrope = Manrope({
-  subsets: ["latin"],
+const figtree = Figtree({
+  subsets: ["latin", "latin-ext"],
   variable: "--font-sans"
+});
+
+const robotoMono = Roboto_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono"
 });
 
 export const dynamicParams = false;
 
 export const viewport: Viewport = {
-  themeColor: "#024ad8"
+  themeColor: "#0b57d0"
 };
 
 export function generateStaticParams() {
@@ -51,7 +56,7 @@ export default async function LocaleLayout({
   const typedLocale = locale as Locale;
   return (
     <html lang={typedLocale} dir={localeMeta[typedLocale].dir}>
-      <body className={manrope.variable}>{children}</body>
+      <body className={`${figtree.variable} ${robotoMono.variable}`}>{children}</body>
     </html>
   );
 }
