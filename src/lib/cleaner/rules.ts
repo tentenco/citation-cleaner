@@ -41,18 +41,74 @@ export const cleanupRules: CleanupRule[] = [
     }
   },
   {
+    id: "perplexity-branding-image",
+    label: "Perplexity logo image",
+    category: "boilerplate",
+    intensity: "safe",
+    providers: ["perplexity"],
+    apply(input) {
+      const pattern = /<img\b[^>]*\bperplexity\.ai[^>]*>/gi;
+      const count = countMatches(input, pattern);
+      return {
+        output: input.replace(pattern, ""),
+        count
+      };
+    }
+  },
+  {
+    id: "perplexity-hidden-citations",
+    label: "Hidden Perplexity citation spans",
+    category: "citations",
+    intensity: "safe",
+    providers: ["perplexity"],
+    apply(input) {
+      const pattern = /<span\b[^>]*display:\s*none[^>]*>[\s\S]*?<\/span>/gi;
+      const count = countMatches(input, pattern);
+      return {
+        output: input.replace(pattern, ""),
+        count
+      };
+    }
+  },
+  {
+    id: "perplexity-asterism-divider",
+    label: "Perplexity asterism divider",
+    category: "boilerplate",
+    intensity: "safe",
+    providers: ["perplexity"],
+    apply(input) {
+      return removeLines(input, [/^(?:<div\b[^>]*>)?\s*⁂\s*(?:<\/div>)?$/i]);
+    }
+  },
+  {
     id: "footnote-definitions",
     label: "Markdown footnote definitions",
     category: "footnotes",
     intensity: "safe",
     providers: ["common"],
     apply(input) {
-      const pattern = /^\[\^\d+\]:\s+\S.*(?:\n|$)/gm;
+      const pattern = /^\[\^[\w-]+\]:\s+\S.*(?:\n|$)/gm;
       const count = countMatches(input, pattern);
       return {
         output: input.replace(pattern, ""),
         count
       };
+    }
+  },
+  {
+    id: "inline-footnote-citations",
+    label: "Inline footnote citation markers",
+    category: "citations",
+    intensity: "safe",
+    providers: ["common"],
+    apply(input) {
+      let count = 0;
+      const output = input.replace(/(?:\s?\[\^[\w-]+\])+/g, (match) => {
+        count += match.match(/\[/g)?.length ?? 0;
+        return "";
+      });
+
+      return { output, count };
     }
   },
   {
