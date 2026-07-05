@@ -1171,3 +1171,272 @@ button:disabled {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Changelog page
+   ------------------------------------------------------------------ */
+.cl-header {
+  max-width: 640px;
+  margin-bottom: 40px;
+}
+
+.cl-header h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.cl-intro {
+  margin: 0;
+  color: var(--colors-graphite);
+  font-size: 1.0625rem;
+}
+
+.changelog {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.cl-major-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--colors-hairline);
+}
+
+.cl-major-chip {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  min-width: 56px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--colors-ink);
+  color: var(--colors-on-ink);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.cl-major-copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.cl-major-label {
+  margin: 0;
+  color: var(--colors-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.cl-major-copy h2 {
+  margin: 4px 0 6px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.cl-major-summary {
+  margin: 0;
+  color: var(--colors-graphite);
+  font-size: 0.95rem;
+}
+
+.cl-major-count {
+  flex: none;
+  align-self: center;
+  color: var(--colors-graphite);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cl-minors {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cl-entry {
+  border: 1px solid var(--colors-hairline);
+  border-radius: 12px;
+  background: var(--colors-paper);
+}
+
+.cl-entry[open] {
+  border-color: var(--colors-steel);
+  box-shadow: var(--shadow-soft-lift);
+}
+
+.cl-entry-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.cl-entry-summary::-webkit-details-marker {
+  display: none;
+}
+
+.cl-entry-summary:hover {
+  background: var(--colors-cloud);
+}
+
+.cl-entry-summary:focus-visible {
+  outline: 2px solid var(--colors-ink);
+  outline-offset: -2px;
+}
+
+.cl-version {
+  flex: none;
+  min-width: 3.25rem;
+  color: var(--colors-ink);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.cl-entry-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cl-latest {
+  flex: none;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--colors-primary);
+  color: var(--colors-on-ink);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.cl-date {
+  flex: none;
+  color: var(--colors-graphite);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.cl-caret {
+  flex: none;
+  color: var(--colors-graphite);
+  transition: transform 180ms ease;
+}
+
+.cl-entry[open] .cl-caret {
+  transform: rotate(180deg);
+}
+
+.cl-changes {
+  list-style: none;
+  margin: 0;
+  padding: 14px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--colors-hairline);
+}
+
+.cl-change {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.cl-type {
+  flex: none;
+  min-width: 76px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.cl-type-added {
+  background: #e5f4ec;
+  color: #1c7c4a;
+}
+
+.cl-type-fixed {
+  background: #fdeaea;
+  color: var(--colors-bloom-deep);
+}
+
+.cl-type-improved {
+  background: #e6effe;
+  color: var(--colors-primary-deep);
+}
+
+.cl-type-changed {
+  background: var(--colors-cloud);
+  color: var(--colors-charcoal);
+}
+
+.cl-change-text {
+  color: var(--colors-charcoal);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* The changelog nav uses <a>; the base button box styling only targets
+   <button>/.segment, so give the link CTA the same shape here. */
+a.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 24px;
+  border: 1px solid var(--colors-ink);
+  border-radius: 4px;
+  background: var(--colors-canvas);
+  color: var(--colors-ink);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+a.nav-cta:hover {
+  background: var(--colors-cloud);
+}
+
+@media (max-width: 520px) {
+  .cl-date {
+    display: none;
+  }
+
+  .cl-change {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .cl-type {
+    align-self: flex-start;
+    min-width: 0;
+  }
+}

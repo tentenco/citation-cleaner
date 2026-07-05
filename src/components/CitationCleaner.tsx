@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { AnalysisPanel } from "@/components/AnalysisPanel";
 import { DiffView } from "@/components/DiffView";
 import { EditorPane } from "@/components/EditorPane";
@@ -12,6 +13,7 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { analyzeText } from "@/lib/analyzer/detect";
 import { cleanMarkdown } from "@/lib/cleaner/clean";
+import { changelogText } from "@/lib/changelog/data";
 import { sampleMarkdown, sampleScenarios } from "@/lib/cleaner/samples";
 import { estimateTokens } from "@/lib/tokens/estimate";
 import type { CleanOptions, CleanResult, Intensity, Provider } from "@/lib/cleaner/types";
@@ -237,6 +239,9 @@ export function CitationCleaner({ locale, dict }: CitationCleanerProps) {
           <a className="nav-link" href="#report">
             {dict.nav.report}
           </a>
+          <Link className="nav-link" href={`/${locale}/changelog`}>
+            {changelogText[locale].nav}
+          </Link>
         </div>
         <div className="nav-right">
           <LanguageSwitcher locale={locale} label={dict.language.label} />
