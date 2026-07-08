@@ -1,6 +1,6 @@
-// Thin launcher: the extension holds no cleaning logic. It opens the web app
-// (cleaner.tenten.dev), which is the single source of truth, so every web
-// deploy updates the extension instantly — no rebuild or reinstall needed.
+// The toolbar click opens the popup UI (see manifest "default_popup"), which
+// cleans text locally. This service worker only backs the right-click entry:
+// clean a selection on any page without leaving it.
 
 const WEB_APP_URL = "https://cleaner.tenten.dev/";
 const MENU_ID = "cc-clean-selection";
@@ -11,11 +11,6 @@ chrome.runtime.onInstalled.addListener(() => {
     title: "Clean selected text with Citation Cleaner",
     contexts: ["selection"]
   });
-});
-
-// Toolbar click (and the ⌘/Ctrl+Shift+L command) open the web app.
-chrome.action.onClicked.addListener(() => {
-  chrome.tabs.create({ url: WEB_APP_URL });
 });
 
 // Right-click a selection: open the web app with the text prefilled. The text

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root {
+        --blue: #024ad8;
+        --ink: #0b1220;
+        --muted: #5b6472;
+        --line: #e4e7ec;
+        --bg: #ffffff;
+        --soft: #f6f7f9;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ink: #e8eaed;
+          --muted: #9aa4b2;
+          --line: #2a2f3a;
+          --bg: #12151c;
+          --soft: #1a1e27;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        width: 380px;
+        margin: 0;
+        font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+      .wrap {
+        padding: 14px;
+      }
+      header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      h1 {
+        font-size: 14px;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+      .sub {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .controls {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 4px;
+      }
+      select {
+        flex: 1;
+        padding: 6px 8px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        font-size: 12px;
+        color: var(--ink);
+      }
+      .seg-group {
+        display: flex;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .seg {
+        border: 0;
+        background: var(--bg);
+        padding: 6px 9px;
+        font-size: 11px;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .seg + .seg {
+        border-left: 1px solid var(--line);
+      }
+      .seg.active {
+        background: var(--blue);
+        color: #fff;
+      }
+      label.field {
+        display: block;
+        font-size: 11px;
+        color: var(--muted);
+        margin: 8px 0 4px;
+      }
+      textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px;
+        font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: var(--ink);
+        background: var(--bg);
+        resize: vertical;
+      }
+      #input {
+        height: 110px;
+      }
+      #output {
+        height: 110px;
+        background: var(--soft);
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      button.act {
+        flex: 1;
+        border: 1px solid var(--line);
+        background: var(--bg);
+        border-radius: 8px;
+        padding: 7px;
+        font-size: 12px;
+        cursor: pointer;
+        color: var(--ink);
+      }
+      button.act.primary {
+        background: var(--blue);
+        border-color: var(--blue);
+        color: #fff;
+      }
+      .stats {
+        font-size: 11px;
+        color: var(--muted);
+        margin: 8px 0 0;
+        min-height: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>Citation Cleaner</h1>
+        <span class="sub">Local · nothing uploaded</span>
+      </header>
+      <div class="controls">
+        <select id="provider" aria-label="Source"></select>
+        <div class="seg-group" id="intensity" role="group" aria-label="Cleanup intensity"></div>
+      </div>
+      <label class="field" for="input">Paste AI text</label>
+      <textarea id="input" placeholder="Paste from ChatGPT, Claude, Gemini, Perplexity…"></textarea>
+      <label class="field" for="output">Cleaned output</label>
+      <textarea id="output" readonly placeholder="Cleaned Markdown appears here"></textarea>
+      <div class="actions">
+        <button class="act primary" id="copy">Copy</button>
+        <button class="act" id="clear">Clear</button>
+      </div>
+      <p class="stats" id="stats"></p>
+    </div>
+    <script type="module" src="dist/popup.js"></script>
+  </body>
+</html>
