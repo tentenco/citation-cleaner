@@ -89,6 +89,36 @@ describe("cleanMarkdown", () => {
     expect(result.stats.boilerplate).toBeGreaterThanOrEqual(2);
   });
 
+  test("strips Perplexity inline domain-label link citations while keeping content links", () => {
+    const input = [
+      "服務層則透過 MCP 或 REST API 對外暴露讀寫介面，供所有 Agent 呼叫。 [github](https://github.com/sdimitrov/mcp-memory)",
+      "",
+      "| 專案名稱 | 定位與特色 |",
+      "|---|---|",
+      "| [mem0ai/mem0](https://github.com/mem0ai/mem0) | 支援多用戶共享記憶，也有企業版 [github](https://github.com/mem0ai/mem0)。 |",
+      "",
+      "- 是否需要「時間性」記憶，而不是互相覆蓋。 [github](https://github.com/getzep/zep)",
+      "",
+      "也可以先用雲端版驗證流程。 [docs.mem0](https://docs.mem0.ai/platform/overview)",
+      "",
+      "你可以在 [launch note](https://example.com/post) 看到細節。"
+    ].join("\n");
+
+    const result = cleanMarkdown(input, {
+      intensity: "safe",
+      provider: "perplexity"
+    });
+
+    expect(result.output).toContain("供所有 Agent 呼叫。");
+    expect(result.output).toContain("| [mem0ai/mem0](https://github.com/mem0ai/mem0) | 支援多用戶共享記憶，也有企業版。 |");
+    expect(result.output).toContain("而不是互相覆蓋。");
+    expect(result.output).toContain("也可以先用雲端版驗證流程。");
+    expect(result.output).toContain("[launch note](https://example.com/post)");
+    expect(result.output).not.toContain("[github]");
+    expect(result.output).not.toContain("[docs.mem0]");
+    expect(result.stats.citations).toBe(4);
+  });
+
   test("removes grouped inline footnote markers for any provider but keeps them inside code", () => {
     const input = [
       "Prose reference [^1_1][^1_2] should disappear.",

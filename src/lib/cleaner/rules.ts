@@ -71,6 +71,36 @@ export const cleanupRules: CleanupRule[] = [
     }
   },
   {
+    id: "perplexity-inline-link-citations",
+    label: "Inline domain-label link citations",
+    category: "citations",
+    intensity: "safe",
+    providers: ["perplexity"],
+    apply(input) {
+      let count = 0;
+      // Perplexity exports citations as markdown links whose text is a lowercase
+      // domain slug matching the target hostname, e.g. "[github](https://github.com/...)".
+      const pattern = /[ \t]*\[([a-z0-9][a-z0-9.-]*)\]\((https?:\/\/[^\s)]+)\)/g;
+      const output = input.replace(pattern, (match, label: string, url: string) => {
+        let host: string;
+        try {
+          host = new URL(url).hostname.replace(/^www\./, "");
+        } catch {
+          return match;
+        }
+
+        if (host !== label && !host.startsWith(`${label}.`)) {
+          return match;
+        }
+
+        count += 1;
+        return "";
+      });
+
+      return { output, count };
+    }
+  },
+  {
     id: "perplexity-asterism-divider",
     label: "Perplexity asterism divider",
     category: "boilerplate",
