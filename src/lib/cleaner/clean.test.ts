@@ -87,6 +87,8 @@ describe("cleanMarkdown", () => {
     expect(result.stats.citations).toBeGreaterThanOrEqual(4);
     expect(result.stats.footnotes).toBe(2);
     expect(result.stats.boilerplate).toBeGreaterThanOrEqual(2);
+    expect(result.providerDetection.provider).toBe("perplexity");
+    expect(result.providerDetection.confidence).toBe("high");
   });
 
   test("strips Perplexity inline domain-label link citations while keeping content links", () => {

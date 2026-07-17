@@ -12,6 +12,15 @@ export type RuleProvider = Exclude<Provider, "auto"> | "common";
 
 export type Intensity = "safe" | "balanced" | "aggressive";
 
+export type ProviderConfidence = "unknown" | "medium" | "high";
+
+export type ProviderDetection = {
+  provider: Exclude<Provider, "auto"> | null;
+  confidence: ProviderConfidence;
+  mode: "detected" | "selected" | "unknown";
+  signals: string[];
+};
+
 export type StatKey =
   | "citations"
   | "footnotes"
@@ -27,6 +36,7 @@ export type CleanResult = {
   stats: CleanStats;
   appliedRules: string[];
   warnings: string[];
+  providerDetection: ProviderDetection;
 };
 
 export type CleanOptions = {

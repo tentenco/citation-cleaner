@@ -1,4 +1,4 @@
-import type { Intensity, StatKey } from "@/lib/cleaner/types";
+import type { Intensity, ProviderConfidence, StatKey } from "@/lib/cleaner/types";
 import { defaultLocale, type Locale } from "./config";
 
 export type ScenarioText = { name: string; description: string };
@@ -59,6 +59,10 @@ export type Dictionary = {
     noInput: string;
     appliedRules: string;
     noRules: string;
+    sourceFingerprint: string;
+    sourceUnknown: string;
+    fingerprintEvidence: string;
+    fingerprintConfidence: Record<ProviderConfidence, string>;
   };
   helpBand: { eyebrow: string; title: string; tabs: [string, string, string] };
   language: { label: string };
@@ -167,7 +171,11 @@ const en: Dictionary = {
     shorter: "{pct}% shorter",
     noInput: "No input",
     appliedRules: "Applied rules",
-    noRules: "No rules applied yet."
+    noRules: "No rules applied yet.",
+    sourceFingerprint: "Source fingerprint",
+    sourceUnknown: "Unknown source",
+    fingerprintEvidence: "Detection evidence",
+    fingerprintConfidence: { unknown: "Unknown", medium: "Medium confidence", high: "High confidence" }
   },
   helpBand: {
     eyebrow: "Local workflow",
@@ -280,7 +288,11 @@ const es: Dictionary = {
     shorter: "{pct}% más corto",
     noInput: "Sin entrada",
     appliedRules: "Reglas aplicadas",
-    noRules: "Aún no se aplicaron reglas."
+    noRules: "Aún no se aplicaron reglas.",
+    sourceFingerprint: "Huella de origen",
+    sourceUnknown: "Origen desconocido",
+    fingerprintEvidence: "Evidencia de detección",
+    fingerprintConfidence: { unknown: "Desconocida", medium: "Confianza media", high: "Confianza alta" }
   },
   helpBand: {
     eyebrow: "Flujo local",
@@ -393,7 +405,11 @@ const fr: Dictionary = {
     shorter: "{pct}% plus court",
     noInput: "Aucune entrée",
     appliedRules: "Règles appliquées",
-    noRules: "Aucune règle appliquée pour l'instant."
+    noRules: "Aucune règle appliquée pour l'instant.",
+    sourceFingerprint: "Empreinte de la source",
+    sourceUnknown: "Source inconnue",
+    fingerprintEvidence: "Indices de détection",
+    fingerprintConfidence: { unknown: "Inconnue", medium: "Confiance moyenne", high: "Confiance élevée" }
   },
   helpBand: {
     eyebrow: "Flux local",
@@ -506,7 +522,11 @@ const de: Dictionary = {
     shorter: "{pct}% kürzer",
     noInput: "Keine Eingabe",
     appliedRules: "Angewandte Regeln",
-    noRules: "Noch keine Regeln angewandt."
+    noRules: "Noch keine Regeln angewandt.",
+    sourceFingerprint: "Quell-Fingerabdruck",
+    sourceUnknown: "Unbekannte Quelle",
+    fingerprintEvidence: "Erkennungsmerkmale",
+    fingerprintConfidence: { unknown: "Unbekannt", medium: "Mittlere Sicherheit", high: "Hohe Sicherheit" }
   },
   helpBand: {
     eyebrow: "Lokaler Ablauf",
@@ -619,7 +639,11 @@ const ja: Dictionary = {
     shorter: "{pct}% 短縮",
     noInput: "入力なし",
     appliedRules: "適用したルール",
-    noRules: "まだルールは適用されていません。"
+    noRules: "まだルールは適用されていません。",
+    sourceFingerprint: "ソースフィンガープリント",
+    sourceUnknown: "不明なソース",
+    fingerprintEvidence: "検出根拠",
+    fingerprintConfidence: { unknown: "不明", medium: "中程度の確度", high: "高い確度" }
   },
   helpBand: {
     eyebrow: "ローカル ワークフロー",
@@ -732,7 +756,11 @@ const zh: Dictionary = {
     shorter: "縮短 {pct}%",
     noInput: "無輸入",
     appliedRules: "已套用規則",
-    noRules: "尚未套用任何規則。"
+    noRules: "尚未套用任何規則。",
+    sourceFingerprint: "來源指紋",
+    sourceUnknown: "未知來源",
+    fingerprintEvidence: "偵測依據",
+    fingerprintConfidence: { unknown: "未知", medium: "中等信心", high: "高信心" }
   },
   helpBand: {
     eyebrow: "本機工作流程",
@@ -845,7 +873,11 @@ const ko: Dictionary = {
     shorter: "{pct}% 짧아짐",
     noInput: "입력 없음",
     appliedRules: "적용된 규칙",
-    noRules: "아직 적용된 규칙이 없습니다."
+    noRules: "아직 적용된 규칙이 없습니다.",
+    sourceFingerprint: "소스 지문",
+    sourceUnknown: "알 수 없는 소스",
+    fingerprintEvidence: "감지 근거",
+    fingerprintConfidence: { unknown: "알 수 없음", medium: "중간 신뢰도", high: "높은 신뢰도" }
   },
   helpBand: {
     eyebrow: "로컬 워크플로",
@@ -958,7 +990,11 @@ const pt: Dictionary = {
     shorter: "{pct}% mais curto",
     noInput: "Sem entrada",
     appliedRules: "Regras aplicadas",
-    noRules: "Nenhuma regra aplicada ainda."
+    noRules: "Nenhuma regra aplicada ainda.",
+    sourceFingerprint: "Impressão digital da fonte",
+    sourceUnknown: "Fonte desconhecida",
+    fingerprintEvidence: "Evidências de detecção",
+    fingerprintConfidence: { unknown: "Desconhecida", medium: "Confiança média", high: "Confiança alta" }
   },
   helpBand: {
     eyebrow: "Fluxo local",
@@ -1071,7 +1107,11 @@ const ar: Dictionary = {
     shorter: "أقصر بنسبة {pct}%",
     noInput: "لا مدخلات",
     appliedRules: "القواعد المطبَّقة",
-    noRules: "لم تُطبَّق أي قواعد بعد."
+    noRules: "لم تُطبَّق أي قواعد بعد.",
+    sourceFingerprint: "بصمة المصدر",
+    sourceUnknown: "مصدر غير معروف",
+    fingerprintEvidence: "أدلة الاكتشاف",
+    fingerprintConfidence: { unknown: "غير معروف", medium: "ثقة متوسطة", high: "ثقة عالية" }
   },
   helpBand: {
     eyebrow: "سير عمل محلي",

@@ -29,7 +29,8 @@ export const sampleScenarios: SampleScenario[] = [
     intensity: "balanced",
     description: "Numbered source list, citation markers, and pasted research links.",
     markdown: [
-      "Perplexity often appends source lists after the answer [1].",
+      '<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" />',
+      "Perplexity often appends source lists after the answer [^4_1].",
       "",
       "The clean version should keep the claim and remove the research trail.",
       "",

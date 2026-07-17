@@ -36,6 +36,32 @@ export type MajorRelease = {
  */
 export const changelog: MajorRelease[] = [
   {
+    major: "3",
+    headline: "Citation Fingerprint",
+    summary: "Evidence-based source detection keeps Auto cleanup precise and explainable.",
+    minors: [
+      {
+        version: "3.0",
+        date: "2026-07-18",
+        title: "Provider detection with an audit trail",
+        changes: [
+          {
+            type: "added",
+            text: "Detect provider-specific export signatures locally and report the confidence and matching evidence."
+          },
+          {
+            type: "improved",
+            text: "Auto mode now runs provider-only rules only when the source fingerprint supports them."
+          },
+          {
+            type: "added",
+            text: "Expose the same provider fingerprint in the public API response for reproducible integrations."
+          }
+        ]
+      }
+    ]
+  },
+  {
     major: "2",
     headline: "Provider-aware cleanup",
     summary: "Cleanup rules that understand where the pasted text came from.",

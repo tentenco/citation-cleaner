@@ -29,5 +29,6 @@ docs/research/                 Research notes and source inspection output
 
 Before calling work complete:
 - Confirm the requested files exist.
-- Run any relevant project-specific checks.
+- Run `npm test -- --run` and `npm run build` for app changes.
+- Run `npm run typecheck:extension` and `npm run build:extension` for extension changes.
 - If no automated checks exist yet, verify the scaffold with `find . -maxdepth 4 -type f | sort`.

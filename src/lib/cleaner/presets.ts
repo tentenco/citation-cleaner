@@ -42,7 +42,7 @@ export function providerMatches(ruleProviders: RuleProvider[], provider: Provide
   }
 
   if (provider === "auto") {
-    return true;
+    return false;
   }
 
   return ruleProviders.includes(provider);

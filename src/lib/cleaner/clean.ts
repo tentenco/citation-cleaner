@@ -1,4 +1,5 @@
 import { cleanupRules } from "./rules";
+import { resolveProvider } from "./detectProvider";
 import { intensityRank, providerMatches } from "./presets";
 import type { CleanOptions, CleanResult, CleanStats } from "./types";
 
@@ -52,12 +53,14 @@ export function cleanMarkdown(input: string, options: CleanOptions): CleanResult
   const stats = { ...defaultStats };
   const appliedRules: string[] = [];
   const protectedInput = protectCode(input);
+  const providerDetection = resolveProvider(input, options.provider);
+  const resolvedProvider = providerDetection.provider ?? "auto";
   let output = protectedInput.output;
 
   try {
     for (const rule of cleanupRules) {
       const intensityAllowed = intensityRank[rule.intensity] <= intensityRank[options.intensity];
-      const providerAllowed = providerMatches(rule.providers, options.provider);
+      const providerAllowed = providerMatches(rule.providers, resolvedProvider);
 
       if (!intensityAllowed || !providerAllowed) {
         continue;
@@ -80,6 +83,7 @@ export function cleanMarkdown(input: string, options: CleanOptions): CleanResult
     output: tidyOutput(restoreCode(output, protectedInput.chunks)),
     stats,
     appliedRules,
-    warnings
+    warnings,
+    providerDetection
   };
 }

@@ -23,8 +23,11 @@ This workspace includes the behavioral guidance from the local
 
 ## Commands
 
-No project-specific build or test commands are defined yet. Add them here when
-the working folder is attached to a concrete codebase.
+- `npm run dev`: start the local Next.js app.
+- `npm test -- --run`: run the Vitest suite once.
+- `npm run build`: run the production build and Next.js TypeScript validation.
+- `npm run typecheck:extension`: typecheck the Chrome extension.
+- `npm run build:extension`: bundle the Chrome extension.
 
 ---
 

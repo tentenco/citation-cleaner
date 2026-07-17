@@ -31,7 +31,13 @@ const emptyResult: CleanResult = {
     blankLines: 0
   },
   appliedRules: [],
-  warnings: []
+  warnings: [],
+  providerDetection: {
+    provider: null,
+    confidence: "unknown",
+    mode: "unknown",
+    signals: []
+  }
 };
 
 function downloadMarkdown(markdown: string) {
@@ -200,12 +206,12 @@ export function CitationCleaner({ locale, dict }: CitationCleanerProps) {
   function loadScenario(index: number) {
     const scenario = sampleScenarios[index];
     const nextOptions: CleanOptions = {
-      provider: scenario.provider,
+      provider: "auto",
       intensity: scenario.intensity
     };
     const nextResult = cleanMarkdown(scenario.markdown, nextOptions);
 
-    setProvider(scenario.provider);
+    setProvider("auto");
     setIntensity(scenario.intensity);
     setInput(scenario.markdown);
     setResult(nextResult);

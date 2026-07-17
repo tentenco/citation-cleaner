@@ -1,4 +1,5 @@
 import type { Dictionary } from "@/i18n/dictionaries";
+import { providerLabels } from "@/lib/cleaner/presets";
 import type { CleanResult, StatKey } from "@/lib/cleaner/types";
 
 const statKeys: StatKey[] = [
@@ -22,6 +23,10 @@ export function RemovedSummary({ dict, result, inputLength }: RemovedSummaryProp
   const reduction = inputLength > 0 ? Math.max(0, inputLength - outputLength) : 0;
   const reductionPercent = inputLength > 0 ? Math.round((reduction / inputLength) * 100) : 0;
   const verdict = outputLength > 0 ? dict.reviewReady : dict.awaiting;
+  const fingerprint = result.providerDetection;
+  const providerLabel = fingerprint.provider
+    ? providerLabels[fingerprint.provider]
+    : dict.sourceUnknown;
 
   return (
     <aside id="report" className="summary-panel" aria-labelledby="removed-summary-title">
@@ -44,6 +49,26 @@ export function RemovedSummary({ dict, result, inputLength }: RemovedSummaryProp
           </div>
         ))}
       </dl>
+
+      <section className="source-fingerprint" aria-labelledby="source-fingerprint-title">
+        <div>
+          <span id="source-fingerprint-title">{dict.sourceFingerprint}</span>
+          <strong>{providerLabel}</strong>
+        </div>
+        <span className={`confidence-badge confidence-${fingerprint.confidence}`}>
+          {dict.fingerprintConfidence[fingerprint.confidence]}
+        </span>
+        {fingerprint.mode === "detected" && fingerprint.signals.length > 0 ? (
+          <div className="fingerprint-evidence">
+            <span>{dict.fingerprintEvidence}</span>
+            <ul>
+              {fingerprint.signals.map((signal) => (
+                <li key={signal}>{signal.replaceAll("-", " ")}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </section>
 
       <div className="delta-row" aria-label={dict.copyDelta}>
         <span>{dict.copyDelta}</span>
