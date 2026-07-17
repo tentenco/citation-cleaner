@@ -7,7 +7,7 @@
 - **Tagline:** Clean AI-generated Markdown locally — with evidence for every provider-specific decision.
 - **Live demo:** https://citation-cleaner.vercel.app
 - **Repository:** https://github.com/tentenco/citation-cleaner
-- **Demo video:** `TO_UPLOAD_PUBLIC_YOUTUBE_URL`
+- **Demo video:** https://youtu.be/hoH3wjwR00M
 - **Primary Codex /feedback Session ID:** `019f71c5-bc9c-7160-9c57-57b1eeec0212`
 
 ## Inspiration
